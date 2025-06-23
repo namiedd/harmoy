@@ -1,0 +1,87 @@
+I. Overview of Layered Architecture
+Huawei's layered architecture aims for "one-time development, multi-device deployment", achieving code reuse and device adaptation through a three-layer model: 
+
+
+Product Customization Layer (Entry Layer) 
+
+Positioning: Application entry point, handling device/scenario-specific requirements (such as UI, interaction logic, resource configuration). 
+
+Features: 
+
+Compile it into an Entry type HAP (Harmony Ability Package) as the main module. 
+
+Support generating independent HAP combinations based on device form factors, flexibly adapting to multiple devices such as mobile phones and tablets. 
+
+Basic Feature Layer (Feature Layer) 
+
+Positioning: Encapsulate highly cohesive business modules (such as navigation bars, payment services), and provide reusable functional components. 
+
+Development Specifications: 
+
+The function that needs to carry the Ability should be compiled into a Feature type HAP. 
+
+No-Ability functionality → Compile on demand to HAR (static library) or HSP (dynamic library) 
+
+Shared Layer (Public Capability Layer) 
+
+Positioning: Provide cross-module sharing capabilities to ensure a unified technology stack. 
+
+Core Competencies: 
+
+Public UI components: standardized pop-up windows and loading controls to ensure consistent user experience. 
+
+Data Management: Unified data access interface (such as OBS storage). 
+
+External interaction: Encapsulate low-level communications such as network requests and device I/O. 
+
+Tool library: Basic tool classes (encryption, compression, etc.). 
+
+Constraint: Only allowed to be dependent by upper layers, reverse calls are prohibited, and it should be compiled into a HAR package. 
+
+II. Model Development Analysis
+1. Dependency Relationship
+Vertical Dependency: Product Customization Layer → Basic Feature Layer → Common Capability Layer (unidirectional invocation). 
+
+Module decoupling: Each layer communicates through interface protocols to avoid code coupling. 
+
+2. Compilation Output Specifications
+Level	Output Type	Deployment Form
+Product Customization Layer	Entry HAP	Application Main Entry
+Basic Feature Layer	Feature HAP/HAR/HSP	Business modules loaded on demand
+Common Capability Layer	HAR	Static Shared Library
+Key Mechanisms: 
+
+HSP Dynamic Library: Supports on-demand loading at runtime, reducing resource consumption. 
+
+Multi-objective construction: The same codebase generates differentiated HAP combinations based on device types. 
+
+III. Model Deployment and Multi-Device Collaboration
+Distribution Process:
+Application market distribution of the .app package → Unpacking into Entry HAP + Feature HAP based on device type → Synchronous deployment of dependent HSPs. 
+
+Multi-device adaptation strategy: 
+
+Tablet devices may load the complete HAP collection, while watches only load the core Entry HAP. 
+
+Unified Experience: Standardize interaction logic through the public capability layer to ensure consistency across endpoints. 
+
+Four. Core Value of Layered Design
+Enhanced Engineering Efficiency 
+
+The public capability layer reduces repetitive development, such as the data management module lowering the data ETL costs for each business line. 
+
+Maintainability and scalability 
+
+Modular design (such as the basic feature layer) supports rapid business iteration, and new functions do not require full-stack reconstruction. 
+
+Safety and controllability 
+
+Hierarchical permission isolation: Centralized management of data security policies in the public capability layer (such as the Ranger permission model) 
+
+Ecological compatibility 
+
+Seamlessly compatible with Huawei's full range of devices (smartphones, in-vehicle infotainment systems, wearables), and supports domestic hardware such as Ascend AI chips. ————————————————
+
+
+Copyright Statement: This article is an original piece by the author and is subject to the CC 4.0 BY-SA license. When reprinted, please include the original source link and this statement. 
+The original text is a blog post in Chinese and it is not appropriate to translate it without the permission of the author. If you have any specific questions or need help with certain parts of the text, feel free to ask and I'll be happy to assist you.
